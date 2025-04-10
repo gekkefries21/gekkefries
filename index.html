@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sam Gekkefries</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #111113;
+            color: #e0e0e0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        #splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(17, 17, 19, 0.96);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.8s ease-out;
+        }
+
+        .splash-content {
+            text-align: center;
+            transform: translateY(-20px);
+        }
+
+        #enter-btn {
+            padding: 18px 36px;
+            font-size: 1.2rem;
+            background: #5865F2;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #enter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg,
+                transparent,
+                rgba(255, 255, 255, 0.15),
+                transparent);
+            transition: 0.6s;
+        }
+
+        #enter-btn:hover::before {
+            left: 100%;
+        }
+
+        #enter-btn:hover {
+            background: #4752C4;
+            transform: translateY(-3px);
+        }
+
+        .splash-text {
+            font-size: 1.1rem;
+            color: #888;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        #video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.25;
+            mix-blend-mode: screen;
+        }
+
+        #bg-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(30%) contrast(110%);
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            opacity: 0;
+            transition: opacity 0.8s ease-out;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 6rem;
+            padding: 0 1rem;
+        }
+
+        .nickname {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #fff;
+            letter-spacing: -1px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .nickname::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: #5865F2;
+            border-radius: 2px;
+        }
+
+        .aka {
+            font-size: 1.4rem;
+            color: #888;
+            margin: 1.5rem 0;
+            font-weight: 400;
+        }
+
+        .title {
+            font-size: 1.2rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 1rem;
+        }
+
+        .about-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 6rem;
+            align-items: center;
+        }
+
+        .about-card {
+            background: rgba(30, 30, 30, 0.4);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(4px);
+        }
+
+        .about-icons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .icon-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            background: rgba(88, 101, 242, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .icon-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .games-section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: #fff;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .game-card {
+            background: rgba(30, 30, 30, 0.4);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .game-video {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .game-content {
+            padding: 1.5rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.5));
+        }
+
+        .game-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .game-description {
+            font-size: 0.9rem;
+            color: #999;
+            line-height: 1.5;
+        }
+
+        .game-theme-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(88, 101, 242, 0.1), rgba(255, 0, 0, 0.1));
+            mix-blend-mode: multiply;
+            pointer-events: none;
+        }
+
+        .discord-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: #5865F2;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            gap: 0.8rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .discord-link:hover {
+            background: #4752C4;
+            transform: translateY(-2px);
+        }
+
+        .video-controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            background: rgba(30, 30, 30, 0.8);
+            padding: 0.8rem 1.2rem;
+            border-radius: 50px;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: opacity 0.3s ease;
+            z-index: 100;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.1);
+        }
+
+        .volume-slider {
+            width: 100px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #5865F2;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .about-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .nickname {
+                font-size: 2.5rem;
+            }
+            
+            .game-card {
+                padding: 1rem;
+            }
+            
+            #enter-btn {
+                font-size: 1.1rem;
+                padding: 16px 32px;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        .video-controls {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    background: rgba(30, 30, 30, 0.8);
+    padding: 0.8rem 1.2rem;
+    border-radius: 50px;
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: opacity 0.3s ease;
+    z-index: 100;
+}
+
+.control-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.control-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.control-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+
+
+
+
+
+
+
+
+    <div id="splash">
+        <div class="splash-content">
+            <div class="splash-text">Welcome to the portfolio of</div>
+            <button id="enter-btn">
+                <span>Explore Works</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="video-container">
+        <video id="bg-video" autoplay muted playsinline preload="auto">
+            <source src="video.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div class="content">
+        <header class="header">
+            <h1 class="nickname">GEKKEFRIES</h1>
+            <div class="aka">AKA Sam</div>
+            <div class="title">Python Developer & very very pro gamer fr</div>
+        </header>
+
+        <section class="about-section">
+            <div class="about-card">
+                <h2>About Me</h2>
+                <p>I like creating things, and solving problems that I face. Enjoy playing video games...</p>
+                <div class="about-icons">
+                    <div class="icon-item">
+                        <i class="fas fa-vr-cardboard"></i>
+                        <span>VR Player</span>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fas fa-gamepad"></i>
+                        <span>Flat Screen Player</span>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fas fa-code"></i>
+                        <span>.py dev</span>
+                    </div>
+                </div>
+            </div>
+            <div class="about-card">
+                <h2>Gaming Preferences</h2>
+                <div class="about-icons">
+                    <div class="icon-item" style="background: rgba(255, 0, 0, 0.15)">
+                        <i class="fas fa-ghost"></i>
+                        <span>Horror</span>
+                    </div>
+                    <div class="icon-item" style="background: rgba(0, 255, 0, 0.15)">
+                        <i class="fas fa-globe"></i>
+                        <span>Open World</span>
+                    </div>
+                    <div class="icon-item" style="background: rgba(0, 0, 255, 0.15)">
+                        <i class="fas fa-campground"></i>
+                        <span>Survival</span>
+                    </div>
+                    <div class="icon-item" style="background: rgba(255, 165, 0, 0.15)">
+                        <i class="fas fa-crosshairs"></i>
+                        <span>Shooters</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="games-section">
+            <div class="section-title">
+                <i class="fas fa-ghost"></i>
+                <h3>Horror Games</h3>
+            </div>
+            <div class="games-grid">
+                <div class="game-card" data-theme="horror" style="--theme-gradient: linear-gradient(45deg, rgba(255,0,0,0.1), rgba(0,0,0,0.3))">
+                    <video class="game-video" muted loop playsinline>
+                        <source src="gameplays/resident_evil7.mp4" type="video/mp4">
+                    </video>
+                    <div class="game-content">
+                        <h4 class="game-title">Resident Evil 7</h4>
+                        <p class="game-description">First-person survival horror experience in the Baker family estate</p>
+                    </div>
+                    <div class="game-theme-overlay"></div>
+                </div>
+                <div class="game-card" data-theme="horror" style="--theme-gradient: linear-gradient(45deg, rgba(255,0,0,0.1), rgba(0,0,0,0.3))">
+                    <video class="game-video" muted loop playsinline>
+                        <source src="gameplays/resident_evil8.mp4" type="video/mp4">
+                    </video>
+                    <div class="game-content">
+                        <h4 class="game-title">Resident Evil 8: Village</h4>
+                        <p class="game-description">Gothic horror adventure with lycans and vampire lords</p>
+                    </div>
+                    <div class="game-theme-overlay"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Survival Games Section -->
+        <section class="games-section">
+            <div class="section-title">
+                <i class="fas fa-campground"></i>
+                <h3>Survival Games</h3>
+            </div>
+            <div class="games-grid">
+                <div class="game-card" data-theme="survival" style="--theme-gradient: linear-gradient(45deg, rgba(139,69,19,0.1), rgba(0,0,0,0.3))">
+                    <video class="game-video" muted loop playsinline>
+                        <source src="gameplays/sons_of_the_forest.mp4" type="video/mp4">
+                    </video>
+                    <div class="game-content">
+                        <h4 class="game-title">Sons of the Forest</h4>
+                        <p class="game-description">Sequel to The Forest with improved building and mutant AI</p>
+                    </div>
+                    <div class="game-theme-overlay"></div>
+                </div>
+                <div class="game-card" data-theme="survival" style="--theme-gradient: linear-gradient(45deg, rgba(139,69,19,0.1), rgba(0,0,0,0.3))">
+                    <video class="game-video" muted loop playsinline>
+                        <source src="gameplays/subnautica.mp4" type="video/mp4">
+                    </video>
+                    <div class="game-content">
+                        <h4 class="game-title">Subnautica</h4>
+                        <p class="game-description">Underwater survival on an alien planet with terrifying creatures</p>
+                    </div>
+                    <div class="game-theme-overlay"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Open World Section -->
+        <section class="games-section">
+            <div class="section-title">
+                <i class="fas fa-globe"></i>
+                <h3>Open World</h3>
+            </div>
+            <div class="games-grid">
+                <div class="game-card" data-theme="open-world" style="--theme-gradient: linear-gradient(45deg, rgba(0,255,0,0.1), rgba(0,0,0,0.3))">
+                    <video class="game-video" muted loop playsinline>
+                        <source src="gameplays/palworld.mp4" type="video/mp4">
+                    </video>
+                    <div class="game-content">
+                        <h4 class="game-title">Palworld</h4>
+                        <p class="game-description">Creature-collecting open world with base-building and survival elements</p>
+                    </div>
+                    <div class="game-theme-overlay"></div>
+                </div>
+                <div class="game-card" data-theme="open-world" style="--theme-gradient: linear-gradient(45deg, rgba(0,255,0,0.1), rgba(0,0,0,0.3))">
+                    <video class="game-video" muted loop playsinline>
+                        <source src="gameplays/sea_of_thieves.mp4" type="video/mp4">
+                    </video>
+                    <div class="game-content">
+                        <h4 class="game-title">Sea of Thieves</h4>
+                        <p class="game-description">Shared world pirate adventure with naval combat and treasure hunting</p>
+                    </div>
+                    <div class="game-theme-overlay"></div>
+                </div>
+                <div class="game-card" data-theme="open-world" style="--theme-gradient: linear-gradient(45deg, rgba(0,255,0,0.1), rgba(0,0,0,0.3))">
+                    <video class="game-video" muted loop playsinline>
+                        <source src="gameplays/into_the_radius.mp4" type="video/mp4">
+                    </video>
+                    <div class="game-content">
+                        <h4 class="game-title">Into the Radius</h4>
+                        <p class="game-description">VR survival shooter in a mysterious exclusion zone</p>
+                    </div>
+                    <div class="game-theme-overlay"></div>
+                </div>
+
+                <div class="game-card" data-theme="open-world" style="--theme-gradient: linear-gradient(45deg, rgba(0,255,0,0.1), rgba(0,0,0,0.3))">
+                    <video class="game-video" muted loop playsinline>
+                        <source src="gameplays/into_the_radius2.mp4" type="video/mp4">
+                    </video>
+                    <div class="game-content">
+                        <h4 class="game-title">Into the Radius 2</h4>
+                        <p class="game-description">VR survival shooter in a mysterious exclusion zone</p>
+                    </div>
+                    <div class="game-theme-overlay"></div>
+                </div>
+
+                <div class="game-card" data-theme="open-world" style="--theme-gradient: linear-gradient(45deg, rgba(0,255,0,0.1), rgba(0,0,0,0.3))">
+                    <video class="game-video" muted loop playsinline>
+                        <source src="gameplays/blade_and_sorcery.mp4" type="video/mp4">
+                    </video>
+                    <div class="game-content">
+                        <h4 class="game-title">Blade & Sorcery</h4>
+                        <p class="game-description">VR medieval combat sandbox with physics-based fighting</p>
+                    </div>
+                    <div class="game-theme-overlay"></div>
+                </div>
+                <div class="game-card" data-theme="open-world" style="--theme-gradient: linear-gradient(45deg, rgba(0,255,0,0.1), rgba(0,0,0,0.3))">
+                    <video class="game-video" muted loop playsinline>
+                        <source src="gameplays/bonelab.mp4" type="video/mp4">
+                    </video>
+                    <div class="game-content">
+                        <h4 class="game-title">Bonelab</h4>
+                        <p class="game-description">Physics-based VR action game with modding support</p>
+                    </div>
+                    <div class="game-theme-overlay"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shooter Games Section -->
+        <section class="games-section">
+            <div class="section-title">
+                <i class="fas fa-crosshairs"></i>
+                <h3>Shooter Games</h3>
+            </div>
+            <div class="games-grid">
+                <div class="game-card" data-theme="shooter" style="--theme-gradient: linear-gradient(45deg, rgba(255,0,0,0.1), rgba(0,0,0,0.3))">
+                    <video class="game-video" muted loop playsinline>
+                        <source src="gameplays/pavlov_vr.mp4" type="video/mp4">
+                    </video>
+                    <div class="game-content">
+                        <h4 class="game-title">Pavlov VR</h4>
+                        <p class="game-description">Multiplayer VR shooter with realistic gun mechanics</p>
+                    </div>
+                    <div class="game-theme-overlay"></div>
+                </div>
+                <div class="game-card" data-theme="shooter" style="--theme-gradient: linear-gradient(45deg, rgba(255,0,0,0.1), rgba(0,0,0,0.3))">
+                    <video class="game-video" muted loop playsinline>
+                        <source src="gameplays/ghosts_of_tabor.mp4" type="video/mp4">
+                    </video>
+                    <div class="game-content">
+                        <h4 class="game-title">Ghosts of Tabor</h4>
+                        <p class="game-description">VR extraction shooter with hardcore survival elements</p>
+                    </div>
+                    <div class="game-theme-overlay"></div>
+                </div>
+                <div class="game-card" data-theme="shooter" style="--theme-gradient: linear-gradient(45deg, rgba(255,0,0,0.1), rgba(0,0,0,0.3))">
+                    <video class="game-video" muted loop playsinline>
+                        <source src="gameplays/battlefield1.mp4" type="video/mp4">
+                    </video>
+                    <div class="game-content">
+                        <h4 class="game-title">Battlefield 1</h4>
+                        <p class="game-description">WWI-themed shooter with large-scale operations</p>
+                    </div>
+                    <div class="game-theme-overlay"></div>
+                </div>
+                <div class="game-card" data-theme="shooter" style="--theme-gradient: linear-gradient(45deg, rgba(255,0,0,0.1), rgba(0,0,0,0.3))">
+                    <video class="game-video" muted loop playsinline>
+                        <source src="gameplays/battlefieldV.mp4" type="video/mp4">
+                    </video>
+                    <div class="game-content">
+                        <h4 class="game-title">Battlefield V</h4>
+                        <p class="game-description">WWII shooter with breakthrough game mode</p>
+                    </div>
+                    <div class="game-theme-overlay"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- zip zip zip-->
+
+        <section class="contact" style="text-align: center; margin-top: 4rem;">
+            <a href="https://discord.com/users/1147540007171670077" target="_blank" class="discord-link">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.17.33.26c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
+                </svg>
+                Contact Me...
+            </a>
+        </section>
+    </div>
+
+    <div class="video-controls">
+        <button class="control-btn" id="prev-video">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/>
+            </svg>
+        </button>
+        <button class="control-btn" id="play-pause">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path id="play-icon" d="M8 5v14l11-7z"/>
+                <path id="pause-icon" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" style="display: none;"/>
+            </svg>
+        </button>
+        <button class="control-btn" id="next-video">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+            </svg>
+        </button>
+        <button class="control-btn" id="mute">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path id="volume-on" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                <path id="volume-off" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" style="display: none;"/>
+            </svg>
+        </button>
+        <input type="range" class="volume-slider" id="volume" min="0" max="1" step="0.1" value="1">
+    </div>
+
+    <script>
+        const gameVideos = document.querySelectorAll('.game-video');
+        
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5
+        };
+    
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target;
+                if (entry.isIntersecting) {
+                    video.play().catch(error => {
+                        console.log('Video autoplay blocked:', error);
+                    });
+                } else {
+                    video.pause();
+                }
+            });
+        }, observerOptions);
+    
+        gameVideos.forEach(video => {
+            videoObserver.observe(video);
+            video.addEventListener('ended', () => {
+                video.currentTime = 0;
+                video.play();
+            });
+        });
+    
+        document.querySelectorAll('.game-video').forEach(video => {
+            video.addEventListener('mouseenter', () => {
+                if (video.paused) {
+                    video.play().catch(error => {
+                        console.log('Hover play blocked:', error);
+                    });
+                }
+            });
+        });
+    
+        document.querySelectorAll('.game-card').forEach(card => {
+            const theme = card.dataset.theme;
+            const overlay = card.querySelector('.game-theme-overlay');
+            if(theme === 'horror') {
+                overlay.style.background = 'linear-gradient(45deg, rgba(255,0,0,0.1), rgba(0,0,0,0.3))';
+            } else if(theme === 'open-world') {
+                overlay.style.background = 'linear-gradient(45deg, rgba(0,255,0,0.1), rgba(0,0,0,0.3))';
+            } else if(theme === 'survival') {
+                overlay.style.background = 'linear-gradient(45deg, rgba(139,69,19,0.1), rgba(0,0,0,0.3))';
+            } else if(theme === 'shooter') {
+                overlay.style.background = 'linear-gradient(45deg, rgba(255,69,0,0.1), rgba(0,0,0,0.3))';
+            }
+        });
+    </script>
+
+<script>
+    const video = document.getElementById('bg-video');
+    const videoHistory = [];
+    let currentVideoIndex = 0;
+
+    const videoList = [
+        'video.mp4',
+        'videos/video2.mp4',
+        'videos/video3.mp4',
+        'videos/video4.mp4'
+    ];
+
+    function loadVideo(index) {
+        const actualSrc = videoList[index] || videoList[0];
+        currentVideoIndex = index;
+        videoHistory.push(actualSrc);
+
+        video.src = actualSrc + `?t=${Date.now()}`;
+        video.load();
+        video.play().catch(error => {
+            console.error('Video error:', error);
+            playNextVideo();
+        });
+    }
+
+    function playNextVideo() {
+        currentVideoIndex = (currentVideoIndex + 1) % videoList.length;
+        loadVideo(currentVideoIndex);
+    }
+
+    function playPreviousVideo() {
+        currentVideoIndex = (currentVideoIndex - 1 + videoList.length) % videoList.length;
+        loadVideo(currentVideoIndex);
+    }
+
+    video.addEventListener('ended', playNextVideo);
+
+    document.getElementById('next-video').addEventListener('click', playNextVideo);
+
+    document.getElementById('prev-video').addEventListener('click', playPreviousVideo);
+
+    document.getElementById('play-pause').addEventListener('click', () => {
+        video[video.paused ? 'play' : 'pause']();
+        document.getElementById('play-icon').style.display = video.paused ? 'block' : 'none';
+        document.getElementById('pause-icon').style.display = video.paused ? 'none' : 'block';
+    });
+
+    document.getElementById('mute').addEventListener('click', () => {
+        video.muted = !video.muted;
+        document.getElementById('volume-on').style.display = video.muted ? 'none' : 'block';
+        document.getElementById('volume-off').style.display = video.muted ? 'block' : 'none';
+    });
+
+    document.getElementById('volume').addEventListener('input', (e) => {
+        video.volume = e.target.value;
+        video.muted = e.target.value === '0';
+    });
+
+    video.addEventListener('volumechange', () => {
+        document.getElementById('volume').value = video.volume;
+    });
+
+    document.getElementById('enter-btn').addEventListener('click', () => {
+        const splash = document.getElementById('splash');
+        const content = document.querySelector('.content');
+
+        video.muted = false;
+        video.play().catch(console.error);
+
+        splash.style.opacity = '0';
+        setTimeout(() => splash.style.display = 'none', 800);
+        setTimeout(() => content.style.opacity = '1', 300);
+    });
+
+    loadVideo(currentVideoIndex);
+</script>
+</body>
+</html>
